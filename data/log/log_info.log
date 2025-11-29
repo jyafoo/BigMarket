@@ -1,0 +1,12 @@
+25-11-28.10:55:49.792 [main            ] INFO  Application            - Starting Application using Java 1.8.0_472 on HNX6T16XDP with PID 38927 (/Users/lijiafu/workplace/big_marketing/big_marketing-app/target/classes started by lijiafu in /Users/lijiafu/workplace/big_marketing)
+25-11-28.10:55:49.793 [main            ] INFO  Application            - The following 1 profile is active: "dev"
+25-11-28.10:55:50.380 [main            ] WARN  ClassPathMapperScanner - No MyBatis mapper was found in '[org.example]' package. Please check your configuration.
+25-11-28.10:55:50.723 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port(s): 8091 (http)
+25-11-28.10:55:50.736 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8091"]
+25-11-28.10:55:50.737 [main            ] INFO  StandardService        - Starting service [Tomcat]
+25-11-28.10:55:50.737 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/9.0.75]
+25-11-28.10:55:50.898 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+25-11-28.10:55:50.898 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1060 ms
+25-11-28.10:55:51.358 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8091"]
+25-11-28.10:55:51.374 [main            ] INFO  TomcatWebServer        - Tomcat started on port(s): 8091 (http) with context path ''
+25-11-28.10:55:51.385 [main            ] INFO  Application            - Started Application in 2.073 seconds (JVM running for 2.878)
