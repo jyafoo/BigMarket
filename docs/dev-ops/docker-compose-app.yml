@@ -1,21 +1,56 @@
 # /usr/local/bin/docker-compose -f /docs/dev-ops/environment/environment-docker-compose-2.4.yml up -d
-version: '3.8'
+version: '3.8' # 指定docker-compose文件版本为3.8
 # docker-compose -f docker-compose-app.yml up -d
-# 你需要修改system为你自身系统的仓库名
 services:
-  big_marketing:
-    image: system/big_marketing:1.0-SNAPSHOT
-    container_name: big_marketing
-    restart: on-failure
+  big_marketing: # 定义一个名为big_marketing的服务
+    image: system/big_marketing:1.0-SNAPSHOT # 指定使用的镜像名称和标签
+    container_name: big_marketing # 设置容器名称
+    restart: on-failure # 设置重启策略，仅在失败时重启
     ports:
-      - "8091:8091"
+      - "8091:8091" # 端口映射，主机端口:容器端口
     environment:
-      - TZ=PRC
-      - SERVER_PORT=8091
+      - TZ=PRC # 设置时区为PRC（中国时区）
+      - SERVER_PORT=8091 # 设置服务器端口
     volumes:
-      - ./log:/data/log
+      - ./log:/data/log # 将主机的./log目录挂载到容器的/data/log目录
     logging:
-      driver: "json-file"
+      driver: "json-file" # 使用JSON格式的日志驱动
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "10m" # 单个日志文件最大大小
+        max-file: "3" # 最大日志文件数量
+
+  redis: # Redis数据库服务
+    image: redis:7.2.0 # 使用Redis 7.2.0版本镜像
+    container_name: redis # 设置容器名称为redis
+    restart: always # 设置重启策略为总是重启
+    hostname: redis # 设置容器主机名为redis
+    privileged: true # 设置容器具有特权权限
+    ports:
+      - 6379:6379 # 端口映射，将主机的16379端口映射到容器的6379端口
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf # 挂载Redis配置文件
+    command: redis-server /usr/local/etc/redis/redis.conf # 启动Redis服务并指定配置文件
+    networks:
+      - my-network # 加入my-network网络
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ] # 执行redis-cli ping命令检查健康状态
+      interval: 10s # 检查间隔为10秒
+      timeout: 5s # 超时时间为5秒
+      retries: 3 # 重试次数为3次
+
+  redis-admin: # Redis管理界面 https://github.com/joeferner/redis-commander
+    image: spryker/redis-commander:0.8.0 # 使用spryker/redis-commander镜像
+    container_name: redis-admin # 设置容器名称为redis-admin
+    hostname: redis-commander # 设置主机名为redis-commander
+    restart: always # 设置重启策略为总是重启
+    ports:
+      - 8081:8081 # 端口映射，将主机的8081端口映射到容器的8081端口
+    environment:
+      - REDIS_HOSTS=local:redis:6379 # 配置Redis主机信息
+      - HTTP_USER=admin # 登录用户名
+      - HTTP_PASSWORD=admin # 登录密码
+    networks:
+      - my-network # 加入my-network网络
+    depends_on:
+      redis:
+        condition: service_healthy # 依赖条件为服务健康
